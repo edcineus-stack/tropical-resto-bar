@@ -1,0 +1,479 @@
+/* ============================================================
+   Tropical Resto-bar — feuille de style
+   Palette tirée du logo et du menu imprimé du restaurant :
+   sable/or du mur, vert palmier, brun café du logo, corail coucher
+   de soleil des cocktails.
+   Pas de police externe : on reste 100% système pour ne faire
+   AUCUNE requête réseau supplémentaire (contrainte réseau Haïti).
+   ============================================================ */
+
+:root {
+  --cream: #FBF3E1;
+  --cream-2: #F3E7C8;
+  --sand: #D9C27E;
+  --palm: #3F5C34;
+  --palm-dark: #2C4224;
+  --coffee: #2B1B12;
+  --coffee-2: #4A3220;
+  --gold: #B98A3E;
+  --coral: #E2603C;
+  --white: #FFFDF8;
+
+  --serif: Georgia, "Iowan Old Style", "Palatino Linotype", "Times New Roman", serif;
+  --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+
+  --radius: 4px;
+  --max-w: 1080px;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+  margin: 0;
+  background: var(--cream);
+  color: var(--coffee);
+  font-family: var(--sans);
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+
+img { max-width: 100%; display: block; }
+
+a { color: inherit; }
+
+.wrap {
+  max-width: var(--max-w);
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* ---------- Skip link / focus ---------- */
+.skip-link {
+  position: absolute; left: -999px; top: 0;
+  background: var(--coffee); color: var(--white);
+  padding: 10px 16px; z-index: 100;
+}
+.skip-link:focus { left: 10px; top: 10px; }
+
+:focus-visible {
+  outline: 3px solid var(--coral);
+  outline-offset: 2px;
+}
+
+/* ---------- Top bar ---------- */
+.topbar {
+  background: var(--coffee);
+  color: var(--cream);
+  font-size: 0.82rem;
+  padding: 7px 0;
+}
+.topbar .wrap {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.topbar a { text-decoration: none; color: var(--sand); }
+.topbar a:hover { color: var(--white); }
+
+/* ---------- Nav ---------- */
+.nav {
+  position: sticky; top: 0; z-index: 40;
+  background: rgba(251, 243, 225, 0.96);
+  backdrop-filter: saturate(140%) blur(4px);
+  border-bottom: 1px solid var(--sand);
+}
+.nav .wrap {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 1.35rem;
+  color: var(--palm-dark);
+  letter-spacing: 0.02em;
+}
+.brand img { width: 34px; height: 34px; border-radius: 50%; }
+
+.nav-links {
+  display: flex;
+  gap: 22px;
+  list-style: none;
+  margin: 0; padding: 0;
+  font-size: 0.95rem;
+}
+.nav-links a {
+  text-decoration: none;
+  color: var(--coffee-2);
+  padding: 4px 2px;
+  border-bottom: 2px solid transparent;
+}
+.nav-links a:hover { border-color: var(--coral); }
+
+.nav-toggle {
+  display: none;
+  background: none; border: none;
+  font-size: 1.6rem;
+  color: var(--coffee);
+  cursor: pointer;
+}
+
+@media (max-width: 760px) {
+  .nav-links {
+    position: absolute;
+    top: 100%; left: 0; right: 0;
+    background: var(--cream);
+    border-bottom: 1px solid var(--sand);
+    flex-direction: column;
+    gap: 0;
+    display: none;
+  }
+  .nav-links.open { display: flex; }
+  .nav-links a {
+    padding: 14px 20px;
+    border-bottom: 1px solid var(--cream-2);
+  }
+  .nav-toggle { display: block; }
+}
+
+/* ---------- Hero ---------- */
+.hero {
+  position: relative;
+  min-height: 78vh;
+  display: flex;
+  align-items: flex-end;
+  color: var(--white);
+  background-color: var(--coffee);
+}
+.hero-img {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  object-fit: cover;
+}
+.hero::after {
+  content: "";
+  position: absolute; inset: 0;
+  background: linear-gradient(180deg, rgba(27,17,10,0.15) 0%, rgba(27,17,10,0.35) 55%, rgba(20,13,8,0.88) 100%);
+}
+.hero-content {
+  position: relative;
+  z-index: 2;
+  padding: 60px 0 46px;
+  width: 100%;
+}
+.hero-eyebrow {
+  font-size: 0.85rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--sand);
+  margin: 0 0 10px;
+}
+.hero h1 {
+  font-family: var(--serif);
+  font-style: italic;
+  font-weight: 400;
+  font-size: clamp(2.4rem, 8vw, 4.2rem);
+  margin: 0 0 14px;
+  line-height: 1.05;
+}
+.hero p {
+  max-width: 46ch;
+  font-size: 1.05rem;
+  color: var(--cream-2);
+  margin: 0 0 26px;
+}
+.hero-ctas { display: flex; flex-wrap: wrap; gap: 12px; }
+
+/* ---------- Buttons ---------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 13px 22px;
+  border-radius: var(--radius);
+  text-decoration: none;
+  font-size: 0.95rem;
+  font-weight: 600;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: transform 0.15s ease, background 0.15s ease;
+}
+.btn:hover { transform: translateY(-1px); }
+.btn-primary { background: var(--coral); color: var(--white); }
+.btn-primary:hover { background: #cb4f31; }
+.btn-outline { background: transparent; color: var(--white); border-color: rgba(255,255,255,0.55); }
+.btn-outline:hover { background: rgba(255,255,255,0.12); }
+.btn-dark { background: var(--coffee); color: var(--cream); }
+.btn-dark:hover { background: var(--coffee-2); }
+.btn-whatsapp { background: #2f6b3f; color: var(--white); }
+.btn-whatsapp:hover { background: #245430; }
+.btn-block { width: 100%; justify-content: center; }
+
+/* ---------- Section shell ---------- */
+section { padding: 64px 0; }
+.section-head { max-width: 620px; margin: 0 auto 34px; text-align: center; }
+.eyebrow {
+  display: block;
+  font-size: 0.78rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 8px;
+}
+h2 {
+  font-family: var(--serif);
+  font-style: italic;
+  font-weight: 400;
+  font-size: clamp(1.7rem, 4vw, 2.4rem);
+  margin: 0 0 8px;
+  color: var(--palm-dark);
+}
+.lede { color: var(--coffee-2); margin: 0; }
+
+/* Sunset divider — motif repris du dégradé de la couverture du menu */
+.divider {
+  height: 4px;
+  border: none;
+  margin: 0;
+  background: linear-gradient(90deg, var(--sand), var(--coral) 55%, var(--gold));
+  opacity: 0.85;
+}
+
+/* Palme décorative (signature graphique, reprise du menu imprimé) */
+.palm-corner {
+  position: absolute;
+  width: 130px; height: 130px;
+  opacity: 0.5;
+  pointer-events: none;
+}
+.palm-corner.tl { top: 6px; left: 6px; }
+.palm-corner.br { bottom: 6px; right: 6px; transform: rotate(180deg); }
+.section-frame { position: relative; overflow: hidden; }
+
+/* ---------- Ambiance strip ---------- */
+.ambiance { background: var(--white); }
+.ambiance-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+}
+.ambiance-grid img {
+  width: 100%; height: 190px; object-fit: cover;
+  border-radius: var(--radius);
+}
+@media (max-width: 760px) {
+  .ambiance-grid { grid-template-columns: repeat(2, 1fr); }
+  .ambiance-grid img { height: 140px; }
+}
+
+/* ---------- Menu ---------- */
+.menu-section { background: var(--cream); }
+.menu-note {
+  text-align: center;
+  font-size: 0.85rem;
+  color: var(--coffee-2);
+  margin: -14px 0 30px;
+}
+.menu-cats { display: grid; gap: 12px; max-width: 780px; margin: 0 auto; }
+.menu-cat {
+  background: var(--white);
+  border: 1px solid var(--cream-2);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+.menu-cat-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  background: none;
+  border: none;
+  text-align: left;
+  padding: 18px 20px;
+  cursor: pointer;
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 1.15rem;
+  color: var(--palm-dark);
+}
+.menu-cat-btn .chev {
+  font-family: var(--sans);
+  font-style: normal;
+  font-size: 1.1rem;
+  color: var(--gold);
+  transition: transform 0.2s ease;
+  flex: none;
+}
+.menu-cat[open] .chev { transform: rotate(45deg); }
+.menu-cat-body { padding: 0 20px 18px; }
+.menu-cat-sub {
+  font-size: 0.82rem;
+  font-style: italic;
+  color: var(--coffee-2);
+  margin: -4px 0 14px;
+}
+.menu-item {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 11px 0;
+  border-top: 1px dashed var(--cream-2);
+}
+.menu-item:first-child { border-top: none; }
+.menu-item-name { font-weight: 600; }
+.menu-item-name .star { color: var(--coral); margin-right: 4px; }
+.menu-item-desc {
+  font-size: 0.85rem;
+  color: var(--coffee-2);
+  margin-top: 2px;
+  font-weight: 400;
+}
+.menu-item-price {
+  flex: none;
+  font-variant-numeric: tabular-nums;
+  color: var(--gold);
+  font-weight: 700;
+  white-space: nowrap;
+}
+.menu-legend {
+  text-align: center;
+  font-size: 0.82rem;
+  color: var(--coffee-2);
+  margin-top: 22px;
+}
+.menu-legend .star { color: var(--coral); }
+
+/* ---------- Gallery ---------- */
+.gallery { background: var(--white); }
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+.gallery-grid img {
+  width: 100%; height: 210px; object-fit: cover;
+  border-radius: var(--radius);
+}
+@media (max-width: 760px) {
+  .gallery-grid { grid-template-columns: repeat(2, 1fr); }
+  .gallery-grid img { height: 150px; }
+}
+
+/* ---------- Infos / address ---------- */
+.infos {
+  background: var(--palm-dark);
+  color: var(--cream);
+}
+.infos h2 { color: var(--cream); }
+.infos .lede { color: var(--cream-2); }
+.infos-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 26px;
+  margin-top: 10px;
+}
+.info-card {
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.14);
+  border-radius: var(--radius);
+  padding: 22px;
+}
+.info-card h3 {
+  font-family: var(--serif);
+  font-style: italic;
+  font-weight: 400;
+  font-size: 1.1rem;
+  margin: 0 0 8px;
+  color: var(--sand);
+}
+.info-card p { margin: 4px 0; font-size: 0.95rem; }
+.info-card a { text-decoration: underline; text-decoration-color: var(--gold); }
+@media (max-width: 760px) {
+  .infos-grid { grid-template-columns: 1fr; }
+}
+
+/* ---------- Reservation ---------- */
+.reservation { background: var(--cream); }
+.res-box {
+  max-width: 640px;
+  margin: 0 auto;
+  background: var(--white);
+  border: 1px solid var(--cream-2);
+  border-radius: var(--radius);
+  padding: 30px;
+}
+.field { margin-bottom: 16px; }
+.field label {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-bottom: 6px;
+  color: var(--coffee-2);
+}
+.field input, .field select, .field textarea {
+  width: 100%;
+  padding: 11px 12px;
+  border: 1px solid var(--cream-2);
+  border-radius: var(--radius);
+  font: inherit;
+  background: var(--cream);
+  color: var(--coffee);
+}
+.field input:focus, .field select:focus, .field textarea:focus {
+  outline: none;
+  border-color: var(--coral);
+  background: var(--white);
+}
+.field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+@media (max-width: 520px) { .field-row { grid-template-columns: 1fr; } }
+.res-actions { display: grid; gap: 10px; margin-top: 22px; }
+.res-note { font-size: 0.82rem; color: var(--coffee-2); margin-top: 14px; }
+.res-status { font-size: 0.9rem; margin-top: 12px; display: none; }
+.res-status.show { display: block; }
+.res-status.ok { color: var(--palm-dark); }
+.res-status.err { color: #a33; }
+
+.res-closed {
+  max-width: 640px;
+  margin: 0 auto;
+  text-align: center;
+  background: var(--white);
+  border: 1px solid var(--cream-2);
+  border-radius: var(--radius);
+  padding: 40px 30px;
+  color: var(--coffee-2);
+}
+
+/* ---------- Footer ---------- */
+footer {
+  background: var(--coffee);
+  color: var(--cream-2);
+  padding: 34px 0 26px;
+  font-size: 0.85rem;
+}
+footer .wrap {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 14px;
+}
+footer a { color: var(--sand); text-decoration: none; }
+footer a:hover { text-decoration: underline; }
+
+/* ---------- Reduced motion ---------- */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .btn:hover { transform: none; }
+}
