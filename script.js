@@ -51,7 +51,7 @@ MENU.forEach((cat, i) => {
         <div class="menu-item-name">${item.star ? '<span class="star">★</span>' : ""}${item.name}</div>
         ${item.desc ? `<div class="menu-item-desc">${item.desc}</div>` : ""}
       </div>
-      <div class="menu-item-price">${fmt.format(item.price)} G</div>
+      <div class="menu-item-price">${item.priceLabel ? item.priceLabel : fmt.format(item.price) + " G"}</div>
     `;
     body.appendChild(row);
   });
