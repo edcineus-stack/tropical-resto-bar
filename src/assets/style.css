@@ -259,6 +259,20 @@ h2 { font-size: clamp(2.1rem, 4.6vw, 3.6rem); }
 .hero-strip a:hover { color: var(--ink); }
 .hero-strip svg { color: var(--accent); width: 1.1em; height: 1.1em; }
 
+/* Téléphone : haut de page plus compact pour que l'adresse ET le numéro
+   restent visibles sans faire défiler. */
+@media (max-width: 600px) {
+  .hero-inner { padding-top: calc(var(--header-h) + 20px); padding-bottom: 22px; }
+  .status-pill { margin-bottom: 16px; }
+  .hero .eyebrow { margin-bottom: 10px; }
+  .hero h1 { font-size: clamp(2.5rem, 11.5vw, 3rem); }
+  .hero-text { margin-top: 14px; font-size: 1rem; }
+  .hero-ctas { margin-top: 22px; gap: 10px; }
+  .hero-ctas .btn { min-height: 46px; padding: 0 20px; }
+  .hero-strip-inner { gap: 6px 20px; padding-top: 12px; padding-bottom: 14px; }
+  .hero-strip a { font-size: .85rem; }
+}
+
 /* Mode clair sur mobile : voile plus couvrant pour garder le texte lisible. */
 @media (max-width: 959px) {
   [data-theme="light"] .hero-media::after {
