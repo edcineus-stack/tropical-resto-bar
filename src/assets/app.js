@@ -59,6 +59,25 @@
     if (row) row.classList.add("is-today");
   })();
 
+  /* ---------- Mode clair / sombre ---------- */
+  (function themeSwitch() {
+    const btn = $("#themeToggle");
+    if (!btn) return;
+    const root = document.documentElement;
+    const meta = $('meta[name="theme-color"]');
+    function sync() {
+      const light = root.dataset.theme === "light";
+      btn.setAttribute("aria-label", light ? btn.dataset.labelDark : btn.dataset.labelLight);
+      if (meta) meta.content = getComputedStyle(root).getPropertyValue("--bg").trim();
+    }
+    btn.addEventListener("click", () => {
+      root.dataset.theme = root.dataset.theme === "light" ? "dark" : "light";
+      try { localStorage.setItem("theme", root.dataset.theme); } catch (e) {}
+      sync();
+    });
+    sync();
+  })();
+
   /* ---------- En-tête ---------- */
   const header = $(".site-header");
   const toggle = $("#navToggle");
@@ -251,8 +270,10 @@
     }
     groups.forEach((g) => {
       const imgs = $$("img", g);
-      const l = imgs.map((el) => ({ src: el.currentSrc || el.src, alt: el.alt }));
+      // Les images [data-lightbox-only] n'apparaissent qu'en plein écran.
+      const l = imgs.map((el) => ({ src: el.dataset.full || el.currentSrc || el.src, alt: el.alt }));
       imgs.forEach((el, i) => {
+        if (el.hasAttribute("data-lightbox-only")) return;
         el.tabIndex = 0;
         el.addEventListener("click", () => open(l, i));
         el.addEventListener("keydown", (e) => { if (e.key === "Enter") open(l, i); });

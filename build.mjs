@@ -32,8 +32,17 @@ function fmtTime(hhmm, lang) {
   return `${h}h${m ? String(m).padStart(2, "0") : ""}`;
 }
 
-const img = (i, lang, attrs = "") =>
-  `<img src="/${i.src}" alt="${tx(i.alt, lang)}" width="${i.width}" height="${i.height}" ${attrs}>`;
+// `sizes` : largeur affichée, pour que le navigateur choisisse la bonne taille.
+// `data-full` : version grande, utilisée par la galerie plein écran.
+const img = (i, lang, attrs = "", sizes = "100vw") => {
+  const set = i.srcset ? ` srcset="${i.srcset.map(([src, w]) => `/${src} ${w}w`).join(", ")}" sizes="${sizes}"` : "";
+  return `<img src="/${i.src}"${set} data-full="/${i.src}" alt="${tx(i.alt, lang)}" width="${i.width}" height="${i.height}" ${attrs}>`;
+};
+
+// Logo : une version par mode (clair / sombre), le CSS affiche la bonne.
+const logo = (attrs = "", alt = "") =>
+  `<img src="/${site.logo.src}" alt="${alt}" width="${site.logo.width}" height="${site.logo.height}" class="logo-for-dark" ${attrs}>` +
+  (site.logo.srcLight ? `<img src="/${site.logo.srcLight}" alt="${alt}" width="${site.logo.width}" height="${site.logo.height}" class="logo-for-light" ${attrs}>` : "");
 
 const waLink = (text) => `https://wa.me/${site.whatsapp}${text ? "?text=" + encodeURIComponent(text) : ""}`;
 
@@ -45,6 +54,8 @@ const icon = {
   clock: `<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></svg>`,
   insta: `<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="3.5" width="17" height="17" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r=".6" fill="currentColor"/></svg>`,
   arrow: `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>`,
+  sun: `<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2.5v2M12 19.5v2M4.6 4.6 6 6M18 18l1.4 1.4M2.5 12h2M19.5 12h2M4.6 19.4 6 18M18 6l1.4-1.4"/></svg>`,
+  moon: `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8.5 8.5 0 0 1 9.5 4a8.5 8.5 0 1 0 10.5 10.5Z"/></svg>`,
   star: `<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" stroke="none" d="m12 3 2.6 5.6 6.1.7-4.5 4.2 1.2 6L12 16.6 6.6 19.5l1.2-6-4.5-4.2 6.1-.7Z"/></svg>`,
 };
 
@@ -87,27 +98,35 @@ function menuHtml(lang) {
   return { tabs, cats };
 }
 
+// N'affiche que l'autre langue : EN sur la page française, FR sur la page anglaise.
 function langSwitch(lang) {
   return site.languages
-    .map((l) =>
-      l === lang
-        ? `<span aria-current="true">${l.toUpperCase()}</span>`
-        : `<a href="${pathFor(l)}" hreflang="${l}" lang="${l}">${l.toUpperCase()}</a>`
-    )
+    .filter((l) => l !== lang)
+    .map((l) => `<a class="icon-btn lang-btn" href="${pathFor(l)}" hreflang="${l}" lang="${l}" aria-label="${tx(copy.nav.otherLang, l)}">${l.toUpperCase()}</a>`)
     .join("");
 }
 
+function themeToggle(lang) {
+  return `<button type="button" class="icon-btn theme-toggle" id="themeToggle" data-label-light="${tx(copy.nav.toLight, lang)}" data-label-dark="${tx(copy.nav.toDark, lang)}" aria-label="${tx(copy.nav.toLight, lang)}">
+    <span class="theme-icon-sun">${icon.sun}</span><span class="theme-icon-moon">${icon.moon}</span>
+  </button>`;
+}
+
+const cssVars = (colors) =>
+  Object.entries(colors).map(([k, v]) => `--${k.replace(/[A-Z]/g, (m) => "-" + m.toLowerCase())}:${v}`).join(";");
+
 function head(lang, title, description) {
   const alternates = site.languages.map((l) => `<link rel="alternate" hreflang="${l}" href="${pathFor(l)}">`).join("");
-  const vars = Object.entries(theme.colors).map(([k, v]) => `--${k.replace(/[A-Z]/g, (m) => "-" + m.toLowerCase())}:${v}`).join(";");
+  const def = theme.defaultMode;
+  const other = def === "dark" ? "light" : "dark";
   return `<!DOCTYPE html>
-<html lang="${lang}">
+<html lang="${lang}" data-theme="${def}">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>${esc(title)}</title>
 <meta name="description" content="${esc(description)}">
-<meta name="theme-color" content="${theme.colors.bg}">
+<meta name="theme-color" content="${theme[def].bg}">
 ${alternates}
 <link rel="icon" href="/favicon.ico" sizes="any">
 <link rel="icon" href="/icons/favicon-32.png" type="image/png">
@@ -116,8 +135,10 @@ ${alternates}
 <link rel="preload" href="/assets/fonts/instrument-serif-italic.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/assets/fonts/manrope.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/assets/style.css">
-<script>document.documentElement.classList.add("js")</script>
-<style>:root{${vars};--font-display:${theme.fonts.display};--font-body:${theme.fonts.body};--radius:${theme.radius}}</style>
+<script>(function(d){d.classList.add("js");try{var m=localStorage.getItem("theme");if(m==="light"||m==="dark")d.dataset.theme=m}catch(e){}})(document.documentElement)</script>
+<style>:root{--font-display:${theme.fonts.display};--font-body:${theme.fonts.body};--radius:${theme.radius}}
+:root,[data-theme="${def}"]{${cssVars(theme[def])};--scheme:${def}}
+[data-theme="${other}"]{${cssVars(theme[other])};--scheme:${other}}</style>
 </head>`;
 }
 
@@ -175,13 +196,14 @@ function page(lang) {
 <header class="site-header" id="top">
   <div class="wrap header-inner">
     <a class="brand" href="${pathFor(lang)}" aria-label="${esc(site.fullName)}">
-      <img src="/${site.logo.src}" alt="" width="${site.logo.width}" height="${site.logo.height}">
+      ${logo()}
     </a>
     <nav class="nav" aria-label="Navigation">
       <ul class="nav-links" id="navLinks">${navItems}</ul>
     </nav>
     <div class="header-actions">
-      <div class="lang-switch">${langSwitch(lang)}</div>
+      ${langSwitch(lang)}
+      ${themeToggle(lang)}
       <a class="btn btn-accent btn-sm header-cta" href="#reserver">${tx(c.nav.book, lang)}</a>
       <button class="nav-toggle" id="navToggle" type="button" aria-expanded="false" aria-controls="navLinks" aria-label="${tx(c.nav.open, lang)}"><span></span><span></span></button>
     </div>
@@ -192,7 +214,7 @@ function page(lang) {
 
   <section class="hero">
     <div class="hero-media">
-      ${img(c.hero.image, lang, 'class="hero-img" loading="eager" fetchpriority="high" decoding="async"')}
+      ${img(c.hero.image, lang, 'class="hero-img" loading="eager" fetchpriority="high" decoding="async"', "(min-width: 960px) 48vw, 100vw")}
     </div>
     <div class="wrap hero-inner">
       <p class="status-pill" id="statusPill" hidden><span class="dot"></span><span class="status-text"></span></p>
@@ -223,7 +245,13 @@ function page(lang) {
         </dl>
       </div>
       <div class="intro-media reveal" data-lightbox-group="intro">
-        ${c.intro.images.map((i, n) => `<figure class="intro-fig intro-fig-${n + 1}">${img(i, lang, 'loading="lazy" decoding="async"')}</figure>`).join("")}
+        ${c.intro.images
+          .map((i, n) => {
+            const more = (i.more || []).map((m) => img(m, lang, 'loading="lazy" decoding="async" hidden data-lightbox-only')).join("");
+            const hint = i.more ? `<span class="more-hint" aria-hidden="true">+${i.more.length}</span>` : "";
+            return `<figure class="intro-fig intro-fig-${n + 1}">${img(i, lang, 'loading="lazy" decoding="async"', "(min-width: 900px) 40vw, 90vw")}${more}${hint}</figure>`;
+          })
+          .join("")}
       </div>
     </div>
   </section>
@@ -352,7 +380,7 @@ function page(lang) {
 
 <footer class="site-footer">
   <div class="wrap footer-inner">
-    <img src="/${site.logo.src}" alt="${esc(site.fullName)}" width="${site.logo.width}" height="${site.logo.height}" class="footer-logo" loading="lazy">
+    <span class="footer-logo">${logo('loading="lazy"', esc(site.fullName))}</span>
     <p>${esc(site.address.short)} · <a href="tel:${mainPhone.tel}">${esc(mainPhone.label)}</a></p>
     <p class="footer-meta">© <span id="year">${new Date().getFullYear()}</span> ${esc(site.fullName)} · ${tx(c.footer.credit, lang)} <a href="${site.credit.url}" target="_blank" rel="noopener">${esc(site.credit.name)}</a></p>
   </div>
@@ -373,7 +401,7 @@ function notFound() {
   return `${head(lang, `${t(copy.notFound.title, lang)} — ${site.fullName}`, t(copy.meta.description, lang))}
 <body class="page-404">
 <main class="nf wrap">
-  <img src="/${site.logo.src}" alt="${esc(site.fullName)}" width="${site.logo.width}" height="${site.logo.height}" class="nf-logo">
+  <span class="nf-logo">${logo("", esc(site.fullName))}</span>
   <p class="eyebrow">404</p>
   <h1>${tx(copy.notFound.title, lang)}</h1>
   <p class="lede">${tx(copy.notFound.text, lang)}${alt ? `<br><span lang="${alt}">${tx(copy.notFound.text, alt)}</span>` : ""}</p>
@@ -411,8 +439,8 @@ writeFileSync(
       short_name: site.name,
       start_url: "/",
       display: "browser",
-      background_color: theme.colors.bg,
-      theme_color: theme.colors.bg,
+      background_color: theme[theme.defaultMode].bg,
+      theme_color: theme[theme.defaultMode].bg,
       icons: [
         { src: "/icons/icon-192.png", sizes: "192x192", type: "image/png" },
         { src: "/icons/icon-512.png", sizes: "512x512", type: "image/png" },

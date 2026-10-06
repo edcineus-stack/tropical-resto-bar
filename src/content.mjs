@@ -9,7 +9,8 @@ export const site = {
   name: "Tropical",
   fullName: "Tropical Resto-bar",
   tagline: { fr: "Resto-bar · Vaudreuil, Cap-Haïtien", en: "Restaurant & bar · Vaudreuil, Cap-Haïtien" },
-  logo: { src: "images/logo-gold.webp", width: 440, height: 285, alt: "Tropical Resto-bar" },
+  // `src` : logo pour le mode sombre, `srcLight` : logo pour le mode clair.
+  logo: { src: "images/logo-gold.webp", srcLight: "images/logo-ink.webp", width: 392, height: 254, alt: "Tropical Resto-bar" },
   timezone: "America/Port-au-Prince",
   currency: "G",
   languages: ["fr", "en"],
@@ -62,6 +63,9 @@ export const copy = {
     open: { fr: "Ouvrir le menu", en: "Open menu" },
     close: { fr: "Fermer le menu", en: "Close menu" },
     skip: { fr: "Aller au contenu", en: "Skip to content" },
+    toLight: { fr: "Passer en mode clair", en: "Switch to light mode" },
+    toDark: { fr: "Passer en mode sombre", en: "Switch to dark mode" },
+    otherLang: { fr: "Version française", en: "English version" },
   },
   hero: {
     eyebrow: { fr: "Resto-bar à Vaudreuil", en: "Restaurant & bar in Vaudreuil" },
@@ -72,7 +76,11 @@ export const copy = {
     },
     ctaMenu: { fr: "Voir la carte", en: "See the menu" },
     ctaBook: { fr: "Réserver une table", en: "Book a table" },
-    image: { src: "images/hero-terrace.webp", width: 800, height: 1067, alt: { fr: "Terrasse ombragée du Tropical, tables et mur peint aux motifs tropicaux", en: "Tropical's shaded terrace with tables and a hand-painted tropical mural" } },
+    image: {
+      src: "images/facade.webp", width: 1086, height: 1448,
+      srcset: [["images/facade-640.webp", 640], ["images/facade.webp", 1086]],
+      alt: { fr: "Façade du Tropical Resto-bar, enseigne et entrée végétalisée", en: "Front of Tropical Resto-bar with its sign and planted entrance" },
+    },
   },
   status: {
     open: { fr: "Ouvert", en: "Open" },
@@ -95,7 +103,15 @@ export const copy = {
       { value: "★", label: { fr: "les coups de cœur de la maison", en: "house favourites" } },
     ],
     images: [
-      { src: "images/terrace-2.webp", width: 738, height: 554, alt: { fr: "Terrasse du Tropical, tables et chaises sous les arbres", en: "Tropical's terrace, tables and chairs under the trees" } },
+      {
+        src: "images/terrasse.webp", width: 1400, height: 933,
+        srcset: [["images/terrasse-640.webp", 640], ["images/terrasse.webp", 1400]],
+        alt: { fr: "Terrasse du Tropical devant le mur peint, clients attablés", en: "Tropical's terrace in front of the painted wall, guests at their tables" },
+        // Photos visibles seulement dans la galerie plein écran, après celle-ci.
+        more: [
+          { src: "images/terrasse-animee.webp", width: 1400, height: 933, alt: { fr: "Terrasse couverte du Tropical sous le bâtiment, en journée", en: "Tropical's covered terrace under the building, during the day" } },
+        ],
+      },
       { src: "images/cocktails.webp", width: 800, height: 1068, alt: { fr: "Trois cocktails maison servis au bar", en: "Three house cocktails served at the bar" } },
     ],
   },
@@ -353,8 +369,10 @@ export const menu = [
 
 // ---------- Thème ----------
 // Changer ces valeurs suffit à donner une autre identité au site.
+// Deux modes : le visiteur bascule avec le bouton soleil/lune.
 export const theme = {
-  colors: {
+  defaultMode: "dark",
+  dark: {
     bg: "#14170F",        // fond principal (nuit, vert très sombre)
     bgRaised: "#1C2016",  // fond des blocs
     bgSoft: "#232819",    // survols, lignes
@@ -365,6 +383,18 @@ export const theme = {
     accentInk: "#17150E", // texte posé sur l'accent
     leaf: "#7E9A5B",      // vert feuille (statut ouvert)
     alert: "#E07A5F",     // erreurs, fermé
+  },
+  light: {
+    bg: "#F5EFE3",
+    bgRaised: "#ECE3D1",
+    bgSoft: "#E2D7C0",
+    ink: "#1E2016",
+    inkSoft: "#5D5848",
+    line: "#D6C9AE",
+    accent: "#87672B",
+    accentInk: "#FFF8EC",
+    leaf: "#4C6A33",
+    alert: "#B0452C",
   },
   fonts: {
     display: "'Instrument Serif', Georgia, serif",

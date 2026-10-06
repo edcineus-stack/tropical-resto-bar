@@ -29,12 +29,12 @@ retire dans `build.mjs` (bloc `<section class="events">`) et dans la liste
 
 C'est ce qui rend le site méconnaissable :
 
-- **Couleurs** : `bg`, `bgRaised`, `bgSoft` (fonds), `ink`, `inkSoft` (textes),
-  `accent` (une seule couleur forte, prise dans le logo), `line`.
-  Le Tropical est en mode sombre « nuit tropicale ». Pour un autre restaurant,
-  un thème clair fonctionne aussi : fond crème, texte presque noir, accent
-  tiré du logo. Dans ce cas, remplacer `color-scheme: dark` par
-  `color-scheme: light` dans `style.css` (champs du formulaire).
+- **Couleurs** : deux palettes, `theme.dark` et `theme.light` (fonds `bg`,
+  `bgRaised`, `bgSoft` ; textes `ink`, `inkSoft` ; une seule couleur forte
+  `accent`, prise dans le logo ; filets `line`). Le visiteur passe de l'une à
+  l'autre avec le bouton soleil/lune ; `theme.defaultMode` choisit celle
+  affichée à la première visite. Prévoir deux logos : `site.logo.src` (mode
+  sombre) et `site.logo.srcLight` (mode clair).
 - **Polices** : télécharger deux nouvelles polices en `.woff2` (sous-ensemble
   latin) dans `src/assets/fonts/`, mettre à jour les `@font-face` en haut de
   `style.css`, les deux `<link rel="preload">` dans `build.mjs` et
@@ -45,7 +45,12 @@ C'est ce qui rend le site méconnaissable :
 
 ## 4. Images et icônes
 
-- Photos en WebP, 900 px de large maximum, 30 à 120 Ko.
+- Photos en WebP. Pour les grandes photos (haut de page, intro), prévoir
+  deux tailles et les déclarer dans `srcset` : une de 640 px pour les
+  téléphones, une de 1 100 à 1 400 px pour les ordinateurs.
+- Une photo peut cacher des photos supplémentaires (`more: [...]`) : elles ne
+  s'affichent pas sur la page, seulement dans la galerie plein écran quand on
+  clique dessus (pastille « +1 » sur la photo).
 - Régénérer le favicon et les icônes (`src/icons/`) à partir du nouveau logo :
   favicon.ico (16/32/48), favicon-32.png, apple-touch-icon.png (180),
   icon-192.png et icon-512.png.
