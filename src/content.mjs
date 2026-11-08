@@ -42,7 +42,7 @@ export const site = {
     6: [["08:30", "24:00"]],
   },
 
-  credit: { name: "Ed Creative Studio", url: "https://wa.me/33766249742" },
+  credit: { name: "Ed Creative Studio", url: "https://www.edcreativestudio.dev/" },
 };
 
 // ---------- Textes de la page ----------
