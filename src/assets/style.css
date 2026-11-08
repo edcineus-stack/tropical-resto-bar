@@ -508,6 +508,9 @@ section:not(.hero) { padding: clamp(80px, 11vw, 140px) 0 clamp(90px, 12vw, 160px
 .site-footer a { text-decoration: none; color: var(--ink); }
 .site-footer a:hover { color: var(--accent); }
 .footer-meta { font-size: .8rem; }
+/* lien vers le studio qui a créé le site : visible et cliquable */
+.site-footer a.studio-link { font-weight: 700; color: var(--ink); text-decoration: underline; text-decoration-color: var(--accent); text-decoration-thickness: 2px; text-underline-offset: 4px; padding: 6px 0; display: inline-block; }
+.site-footer a.studio-link:hover, .site-footer a.studio-link:focus-visible { color: var(--accent); }
 
 /* ---------- Bouton WhatsApp flottant ---------- */
 .wa-float {

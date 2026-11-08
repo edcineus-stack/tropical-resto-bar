@@ -382,7 +382,7 @@ function page(lang) {
   <div class="wrap footer-inner">
     <span class="footer-logo">${logo('loading="lazy"', esc(site.fullName))}</span>
     <p>${esc(site.address.short)} · <a href="tel:${mainPhone.tel}">${esc(mainPhone.label)}</a></p>
-    <p class="footer-meta">© <span id="year">${new Date().getFullYear()}</span> ${esc(site.fullName)} · ${tx(c.footer.credit, lang)} <a href="${site.credit.url}" target="_blank" rel="noopener">${esc(site.credit.name)}</a></p>
+    <p class="footer-meta">© <span id="year">${new Date().getFullYear()}</span> ${esc(site.fullName)} · ${tx(c.footer.credit, lang)} <a class="studio-link" href="${site.credit.url}">${esc(site.credit.name)} <span aria-hidden="true">→</span></a></p>
   </div>
 </footer>
 
